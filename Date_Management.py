@@ -4,9 +4,10 @@ from WhatsApp_Objects import WhatsApp_Message
 
 class WhatsApp_Messages_Calendar:
     def __init__(self):
-        self.Years = []
-        self.YearsList = []
-        self.Messages = []
+        self.Years = [] # Years as objects.
+        self.YearsList = [] # Years as strings.
+        self.Messages = [] # WhatsApp Message objects.
+        self.WordsCounter = {} # DICT[Word] = Number of times used.
 
     def AddMessage(self, Message):
         if Message.Date.Year not in self.YearsList:
@@ -23,6 +24,11 @@ class WhatsApp_Messages_Calendar:
             CurrentDay = CurrentMonth[CurrentMonth.Get_WeekNumber(MessageDay.Day)-1][MessageDay.WeekDay]
             CurrentDay.AddMessage(Message)
             self.Messages.append(Message)
+            for MessageWord in Message.GetWords():
+                if MessageWord in self.WordsCounter:
+                    self.WordsCounter[MessageWord] = self.WordsCounter[MessageWord] + 1
+                else:
+                    self.WordsCounter[MessageWord] = 1
         else:
             raise AddMessageError(f"The object which you're trying to add isn't a WhatsApp_Message, is {type(Message)}.")
 
@@ -31,6 +37,9 @@ class WhatsApp_Messages_Calendar:
             return self.Messages[itemKey]
         except IndexError:
             raise SearchingMessageError(f"Wrong message number, number can't be bigger than {len(self.Messages)-1}, your message number is {itemKey}")
+
+    def __str__(self):
+        return (f"Calendar with years {str(self.YearsList).replace('[', '').replace(']', '')}.")
 
     def __len__(self):
         n = 0

@@ -44,7 +44,10 @@ class WhatsApp_Message_Text:
                 self.LowerMessage = self.LowerMessage.replace(MessageChar, '')
                 
             if ord(MessageChar) >= 127987 and ord(MessageChar) <= 129535: # If the char is a emoji, we add to the emojis list.
-                self.Emojis.append(MessageChar)
+                if ord(MessageChar) >= 127995 and ord(MessageChar) <= 127999:
+                    None
+                else:
+                    self.Emojis.append(MessageChar)
         self.Words = self.LowerMessage.split() # Just lowercase words, using it to count the most used words.
 
     def __str__(self):
